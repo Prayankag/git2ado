@@ -1,30 +1,48 @@
-name: workflow to build and deploy to Azure
+name: Trigger Existing Azure Pipeline
 
 on:
   workflow_dispatch:
+    inputs:
+      orgName:
+        description: 'Enter your Azure DevOps Organization name'
+        required: true
+        default: 'devopsokn'
+      projectName:
+        description: 'Enter your Azure DevOps Project name'
+        required: true
+        default: 'MyPOC'
+      targetRepositoryName:
+        description: 'Enter the target repository name'
+        required: true
+        default: 'test_Automation_Repo'
+      ResourceYamlFile:
+        description: 'Select the resource YAML file'
+        required: true
+        type: choice
+        options:
+          - 'vm_provision.yaml'
+          - 'webapp_provision.yaml'
 
 jobs:
-  build-in-actions-workflow:
+  trigger-azure-pipeline:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-              
-   # Authentication
-    # - uses: azure/login@v1
-    #   with:
-    #     creds: ${{ secrets.AZURE_CREDENTIALS  }}
-    - name: Setup Azure Login using Service Principal
-      uses: azure/login@v1
-      with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}      
-  deploy-using-azure-pipelines:
-    needs: build-in-actions-workflow
-    runs-on: ubuntu-latest
-    steps:
-    - name: 'Trigger an Azure Pipeline to deploy the app to PRODUCTION'
-      uses: Azure/pipelines@releases/v1
-      with:
-        azure-devops-project-url: 'https://dev.azure.com/devopsokn/MyPOC'
-        azure-pipeline-name: 'test_Automation_Repo' 
-        azure-devops-token: '3sI4Q2zIqRsNEFx5gcnnVu68FKq2jWYJu00VgnomnwV01mKh0q15JQQJ99ALACAAAAAAAAAAAAASAZDOLTAY'
+      - name: Checkout the code
+        uses: actions/checkout@v2
 
+      - name: Setup Azure Login using Service Principal
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Trigger an Existing Azure Pipeline to deploy the app to PRODUCTION
+        uses: Azure/pipelines@releases/v1
+        with:
+          azure-devops-project-url: 'https://dev.azure.com/${{ github.event.inputs.orgName }}/${{ github.event.inputs.projectName }}'
+          azure-pipeline-name: 'test_Automation_Repo'  # Use your existing pipeline name here
+          azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
+          parameters: |
+            {
+              "ResourceYamlFile": "${{ github.event.inputs.ResourceYamlFile }}",
+              "targetRepositoryName": "${{ github.event.inputs.targetRepositoryName }}"
+            }
