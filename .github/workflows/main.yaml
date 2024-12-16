@@ -15,7 +15,6 @@ on:
       ResourceYamlFile:
         description: 'Select the resource YAML file'
         required: true
-        type: string
 
 jobs:
   build-in-actions-workflow:
