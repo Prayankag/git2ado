@@ -6,36 +6,30 @@ on:
       orgName:
         description: 'Enter your Azure DevOps Organization name'
         required: true
-        default: 'devopsokn'
       projectName:
         description: 'Enter your Azure DevOps Project name'
         required: true
-        default: 'MyPOC'
       targetRepositoryName:
         description: 'Enter the target repository name'
         required: true
-        default: 'test_Automation_Repo'
       ResourceYamlFile:
         description: 'Select the resource YAML file'
         required: true
         type: string
-        default: 'vm_provision.yaml'
 
 jobs:
-  trigger-azure-pipeline:
+  build-in-actions-workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v2
-
-      - name: Setup Azure Login using Service Principal
-        uses: azure/login@v1
-        with:
+    - uses: actions/checkout@master
+    - name: Setup Azure Login using Service Principal
+      uses: azure/login@v1
+      with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Trigger an Existing Azure Pipeline
-        uses: Azure/pipelines@releases/v1
-        with:
+    - name: Trigger an Existing Azure Pipeline
+      uses: Azure/pipelines@releases/v1
+      with:
           azure-devops-project-url: 'https://dev.azure.com/${{ github.event.inputs.orgName }}/${{ github.event.inputs.projectName }}'
           azure-pipeline-name: ${{ github.event.inputs.targetRepositoryName }}
           azure-devops-token: ${{ secrets.AZURE_DEVOPS_TOKEN }}
