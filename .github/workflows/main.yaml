@@ -17,6 +17,16 @@ on:
         required: true
 
 jobs:
+  # Display input values for debugging
+  display-input-values:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display Input Values
+        run: |
+          echo "orgName: ${{ github.event.inputs.orgName }} "
+          echo "projectname: ${{ github.event.inputs.projectName }}"
+          echo "ResourceYamlFile": ${{ github.event.inputs.ResourceYamlFile }}"
+          echo "targetRepositoryName": ${{ github.event.inputs.targetRepositoryName }}"
   build-in-actions-workflow:
     runs-on: ubuntu-latest
     steps:
