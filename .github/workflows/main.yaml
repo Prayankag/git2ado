@@ -15,6 +15,10 @@ on:
       ResourceYamlFile:
         description: 'Select the resource YAML file'
         required: true
+        type: choice
+        options:
+          - 'vm_provision.yaml'
+          - 'webapp_provision.yaml'
 
 jobs:
   # Display input values for debugging
