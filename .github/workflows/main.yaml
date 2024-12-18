@@ -16,13 +16,13 @@ on:
       ResourceYamlFile:
         description: 'Select the resource YAML file'
         required: true
-      resourcegroup:
+      resourceGroup:
         description: 'Select the Resourcegroup'
         required: true
       vmName:
         description: 'VM Name'
         required: true
-      ostype:
+      osType:
         description: 'OS type'
         required: true
 
@@ -37,9 +37,9 @@ jobs:
           echo "projectname: ${{ github.event.inputs.projectName }}"
           echo "ResourceYamlFile: ${{ github.event.inputs.ResourceYamlFile }}"
           echo "azure-pipeline-name: ${{ github.event.inputs.azure-pipeline-name }}"
-          echo "resourcegroup: ${{ github.event.inputs.resourcegroup }}"
+          echo "resourceGroup: ${{ github.event.inputs.resourceGroup }}"
           echo "vmName: ${{ github.event.inputs.vmName }}"
-          echo "ostype: ${{ github.event.inputs.ostype }}"
+          echo "osType: ${{ github.event.inputs.osType }}"
 
   build-in-actions-workflow:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
           parameters: |
             {
               "ResourceYamlFile": "${{ github.event.inputs.ResourceYamlFile }}",
-              "Resourcegroup": "${{ github.event.inputs.resourcegroup }}",
+              "Resourcegroup": "${{ github.event.inputs.resourceGroup }}",
               "VMName": "${{ github.event.inputs.vmName }}",
-              "OStype": "${{ github.event.inputs.ostype }}"
+              "OStype": "${{ github.event.inputs.osType }}"
             }
